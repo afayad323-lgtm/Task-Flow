@@ -11,6 +11,14 @@ const port = process.env.PORT;
 
 app.use("/api/auth", userRouter);
 app.use("/api/tasks", taskRouter);
+app.use((err, req, res, next) => {
+  console.log("ERROR 💥", err);
+
+  res.status(err.statusCode || 500).json({
+    status: err.status || "error",
+    message: err.message || "Internal Server Error",
+  });
+});
 
 connectToDb().then(() => {
   app.listen(port, () => {
